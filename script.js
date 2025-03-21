@@ -2,6 +2,7 @@ window.onload = () => {
   loadSavedCode();
   setupLineNumbers();
   switchTab("htmlCode");
+  loadSharedCode();
 
   document.getElementById("runButton").addEventListener("click", run);
 
@@ -265,4 +266,28 @@ function copyCode() {
             })
             .catch(() => alert("❌ Failed to copy code!"));
     }
+}
+function generateShareableLink() {
+  const htmlCode = encodeURIComponent(document.getElementById("htmlCode").value);
+  const cssCode = encodeURIComponent(document.getElementById("cssCode").value);
+  const jsCode = encodeURIComponent(document.getElementById("jsCode").value);
+
+  const shareLink = `${window.location.origin}${window.location.pathname}?html=${htmlCode}&css=${cssCode}&js=${jsCode}`;
+  
+  navigator.clipboard.writeText(shareLink)
+    .then(() => alert("🔗 Shareable link copied to clipboard!"))
+    .catch(() => alert("❌ Failed to copy link!"));
+}
+
+
+function loadSharedCode() {
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.has("html") || params.has("css") || params.has("js")) {
+    document.getElementById("htmlCode").value = decodeURIComponent(params.get("html") || "");
+    document.getElementById("cssCode").value = decodeURIComponent(params.get("css") || "");
+    document.getElementById("jsCode").value = decodeURIComponent(params.get("js") || "");
+
+    run();
+  }
 }

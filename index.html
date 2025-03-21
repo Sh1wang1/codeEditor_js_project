@@ -49,7 +49,12 @@
       </div>
 
       <div class="output-panel">
+          
         <div class="panel">
+          <button id="beautyButton" onclick="beautifyCode()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Beautify Code
+          </button>
+          
             <button id="copyButton" onclick="copyCode()">
                 <i class="fa-solid fa-copy"></i> Copy Code
               </button>
@@ -59,7 +64,8 @@
             <button class="menu-btn" onclick="toggleMenu()">⋮</button>
             <div class="menu-content" id="menuContent">
               <a href="#" onclick="downloadCode()">Download Code</a>
-              <a href="#" onclick="beautifyCode()">Beautify Code</a>
+           
+              <a href="#" onclick="generateShareableLink()">Share Code</a>
               <a href="#" onclick="clearCode()">Clear All</a>
               <a href="#" onclick="clearOutput()">Clear Output Only</a>
               <a href="#" onclick="editorSetting()">Editor Setting</a>
