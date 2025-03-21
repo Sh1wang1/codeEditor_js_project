@@ -243,3 +243,20 @@ textarea.code-area {
         transform: translate(-50%, -50%);
     }
 }
+#copyButton {
+    background:#444;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    width: 23%;
+    border-radius: 12px;
+   
+  }
+  
+  #copyButton {
+    transition: all 0.3s ease-in-out;
+}
+
+  

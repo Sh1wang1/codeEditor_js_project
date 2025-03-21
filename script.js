@@ -236,3 +236,33 @@ function clearOutput() {
 
 
 function editorSetting() {}
+function copyCode() {
+    const activeCodeArea = document.querySelector(".code-area.active");
+    const copyButton = document.getElementById("copyButton");
+
+    if (activeCodeArea) {
+        const code = activeCodeArea.value;
+
+        if (code.trim() === "") {
+            alert("Nothing to copy!");
+            return;
+        }
+
+        navigator.clipboard
+            .writeText(code)
+            .then(() => {
+              
+                copyButton.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+                copyButton.style.background = "grey";
+                
+                copyButton.style.transition = "0.3s ease-in-out";
+
+                
+                setTimeout(() => {
+                    copyButton.innerHTML = '<i class="fa-solid fa-copy"></i> Copy Code';
+                    copyButton.style.background = "#444";
+                }, 2000);
+            })
+            .catch(() => alert("❌ Failed to copy code!"));
+    }
+}
