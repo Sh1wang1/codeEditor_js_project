@@ -169,26 +169,6 @@ function downloadCode() {
   URL.revokeObjectURL(url);
 }
 
-function clearCode() {
-  ["htmlCode", "cssCode", "jsCode"].forEach((id) => {
-    document.getElementById(id).value = "";
-  });
-
-  clearOutput();
-  localStorage.removeItem("html");
-  localStorage.removeItem("css");
-  localStorage.removeItem("js");
-  localStorage.removeItem("output");
-
-  alert("All code and output have been cleared!");
-}
-
-function clearOutput() {
-  document.querySelector("iframe").srcdoc = "";
-  localStorage.removeItem("output");
-
-  alert("Output has been cleared!");
-}
 function beautifyCode() {
     const htmlCode = document.getElementById("htmlCode");
     const cssCode = document.getElementById("cssCode");
@@ -203,6 +183,55 @@ function beautifyCode() {
     localStorage.setItem("css", cssCode.value);
     localStorage.setItem("js", jsCode.value);
 
+}
+function showConfirmation(message, onConfirm) {
+    const confirmationBox = document.createElement("div");
+    confirmationBox.className = "confirmation-dialog";
+    confirmationBox.innerHTML = `
+        <div class="confirmation-content">
+            <p>${message}</p>
+            <button id="confirmYes">Yes</button>
+            <button id="confirmNo">No</button>
+        </div>
+    `;
+    document.body.appendChild(confirmationBox);
+
+    document.getElementById("confirmYes").addEventListener("click", () => {
+        document.body.removeChild(confirmationBox);
+        onConfirm();
+    });
+
+    document.getElementById("confirmNo").addEventListener("click", () => {
+        document.body.removeChild(confirmationBox);
+    });
+}
+
+function clearCode() {
+    showConfirmation("Are you sure you want to delete all code and output?", () => {
+        ["htmlCode", "cssCode", "jsCode"].forEach((id) => {
+            document.getElementById(id).value = "";
+        });
+
+        localStorage.removeItem("html");
+        localStorage.removeItem("css");
+        localStorage.removeItem("js");
+        localStorage.removeItem("output");
+
+        const outputFrame = document.getElementById("outputFrame");
+        const outputDoc = outputFrame.contentDocument || outputFrame.contentWindow.document;
+        outputDoc.open();
+        outputDoc.write("");
+        outputDoc.close();
+
+    });
+}
+
+function clearOutput() {
+    showConfirmation("Are you sure you want to clear the output only?", () => {
+        document.querySelector("iframe").srcdoc = "";
+        localStorage.removeItem("output");
+
+    });
 }
 
 
