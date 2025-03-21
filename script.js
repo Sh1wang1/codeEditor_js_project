@@ -2,7 +2,6 @@ window.onload = () => {
     loadSavedCode();
     setupLineNumbers();
     switchTab("htmlCode");
-    setPlaceholder();
 
     document.getElementById("runButton").addEventListener("click", run);
 
@@ -11,7 +10,6 @@ window.onload = () => {
     });
 };
 
-// Set placeholder output
 function setPlaceholder() {
     const outputFrame = document.getElementById("outputFrame");
     const outputDoc = outputFrame.contentDocument || outputFrame.contentWindow.document;
@@ -38,18 +36,16 @@ function removePlaceholder() {
     const outputFrame = document.getElementById("outputFrame");
     const outputDoc = outputFrame.contentDocument || outputFrame.contentWindow.document;
 
-    if (outputDoc.body.innerText.includes("Please write your code before running!")) {
-        outputDoc.open();
-        outputDoc.write("");
-        outputDoc.close();
-    }
+    outputDoc.open();
+    outputDoc.write("");
+    outputDoc.close();
 }
 
 
 function switchTab(id) {
     document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
     document.querySelectorAll(".code-area").forEach((area) => area.classList.remove("active"));
-    document.querySelectorAll(".line-numbers").forEach((ln) => ln.style.display = "none");
+    document.querySelectorAll(".line-numbers").forEach((ln) => (ln.style.display = "none"));
 
     document.getElementById(id).classList.add("active");
     document.querySelector(`.tab[onclick="switchTab('${id}')"]`).classList.add("active");
@@ -58,39 +54,34 @@ function switchTab(id) {
 
 
 function run() {
-    try {
-        const htmlCode = document.getElementById("htmlCode").value.trim();
-        const cssCode = document.getElementById("cssCode").value;
-        const jsCode = document.getElementById("jsCode").value;
+    const htmlCode = document.getElementById("htmlCode").value.trim();
+    const cssCode = document.getElementById("cssCode").value;
+    const jsCode = document.getElementById("jsCode").value;
 
-        const outputFrame = document.getElementById("outputFrame");
-        const outputDoc = outputFrame.contentDocument || outputFrame.contentWindow.document;
+    const outputFrame = document.getElementById("outputFrame");
+    const outputDoc = outputFrame.contentDocument || outputFrame.contentWindow.document;
 
-        outputDoc.open();
+    outputDoc.open();
 
-        if (htmlCode === "") {
-            setPlaceholder();  // Reset placeholder if no HTML code
-        } else {
-            const fullOutput = `
-                <html>
-                    <head><style>${cssCode}</style></head>
-                    <body>
-                        ${htmlCode}
-                        <script>${jsCode}<\/script>
-                    </body>
-                </html>
-            `;
+    if (htmlCode === "" && cssCode === "" && jsCode === "") {
+        setPlaceholder();
+    } else {
+        const fullOutput = `
+            <html>
+                <head><style>${cssCode}</style></head>
+                <body>
+                    ${htmlCode}
+                    <script>${jsCode}<\/script>
+                </body>
+            </html>
+        `;
 
-            outputDoc.write(fullOutput);
-
-            saveCode();
-            localStorage.setItem("output", fullOutput);
-        }
-
-        outputDoc.close();
-    } catch (err) {
-        alert("Error in your code: " + err.message);
+        outputDoc.write(fullOutput);
+        saveCode();
+        localStorage.setItem("output", fullOutput);
     }
+
+    outputDoc.close();
 }
 
 
@@ -122,7 +113,6 @@ function setupLineNumbers() {
         if (id !== "htmlCode") lineNumbers.style.display = "none";
     });
 }
-
 
 function saveCode() {
     ["html", "css", "js"].forEach((type) => {
