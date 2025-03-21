@@ -1,46 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Code Editor</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://kit.fontawesome.com/405867b9a1.js" crossorigin="anonymous"></script>
-</head>
+    <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://kit.fontawesome.com/405867b9a1.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.0/beautify-html.min.js"></script>
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <div class="editor-panel">
-            <div class="tabs">
-                <div class="tab active" onclick="switchTab('htmlCode')"><i class="fa-brands fa-html5"></i> HTML</div>
-                <div class="tab" onclick="switchTab('cssCode')"><i class="fa-brands fa-css3-alt"></i> CSS</div>
-                <div class="tab" onclick="switchTab('jsCode')"><i class="fa-brands fa-js"></i> JavaScript</div>
-            </div>
-
-            <div class="editor-container">
-                <textarea id="htmlCode" class="code-area active" placeholder="Write Your HTML Code here..."></textarea>
-                <textarea id="cssCode" class="code-area" placeholder="Write Your CSS Code here..."></textarea>
-                <textarea id="jsCode" class="code-area" placeholder="Write Your JavaScript Code here..."></textarea>
-            </div>
-        </div>
-
-        <div class="output-panel">
-            <div class="panel">
-            <button id="runButton"><i class="fa-solid fa-play"></i> Run</button>
-            <div class="menu-container">
-              <button class="menu-btn" onclick="toggleMenu()">⋮</button>
-              <div class="menu-content" id="menuContent">
-                  <a href="#" onclick="downloadCode()">Download Code</a>
-                  <a href="#" onclick="clearCode()">Clear All</a>
-                  <a href="#" onclick="clearOutput()">Clear Output Only</a>
-                  <a href="#" onclick="editorSetting()">Editor Setting</a>
-              </div>
+      <div class="editor-panel">
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab('htmlCode')">
+            <i class="fa-brands fa-html5"></i> HTML
+          </div>
+          <div class="tab" onclick="switchTab('cssCode')">
+            <i class="fa-brands fa-css3-alt"></i> CSS
+          </div>
+          <div class="tab" onclick="switchTab('jsCode')">
+            <i class="fa-brands fa-js"></i> JavaScript
           </div>
         </div>
-            <iframe id="outputFrame"></iframe>
+
+        <div class="editor-container">
+          <textarea
+            id="htmlCode"
+            class="code-area active"
+            placeholder="Write Your HTML Code here..."
+          ></textarea>
+          <textarea
+            id="cssCode"
+            class="code-area"
+            placeholder="Write Your CSS Code here..."
+          ></textarea>
+          <textarea
+            id="jsCode"
+            class="code-area"
+            placeholder="Write Your JavaScript Code here..."
+          ></textarea>
         </div>
+      </div>
+
+      <div class="output-panel">
+        <div class="panel">
+          <button id="runButton"><i class="fa-solid fa-play"></i> Run</button>
+          <div class="menu-container">
+            <button class="menu-btn" onclick="toggleMenu()">⋮</button>
+            <div class="menu-content" id="menuContent">
+              <a href="#" onclick="downloadCode()">Download Code</a>
+              <a href="#" onclick="beautifyCode()">Beautify Code</a>
+              <a href="#" onclick="clearCode()">Clear All</a>
+              <a href="#" onclick="clearOutput()">Clear Output Only</a>
+              <a href="#" onclick="editorSetting()">Editor Setting</a>
+            </div>
+          </div>
+        </div>
+        <iframe id="outputFrame"></iframe>
+      </div>
     </div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
