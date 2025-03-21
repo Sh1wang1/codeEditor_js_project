@@ -1,12 +1,49 @@
-
 window.onload = () => {
     loadSavedCode();
     setupLineNumbers();
     switchTab("htmlCode");
-
+    setPlaceholder();
 
     document.getElementById("runButton").addEventListener("click", run);
+
+    ["htmlCode", "cssCode", "jsCode"].forEach((id) => {
+        document.getElementById(id).addEventListener("input", removePlaceholder);
+    });
 };
+
+// Set placeholder output
+function setPlaceholder() {
+    const outputFrame = document.getElementById("outputFrame");
+    const outputDoc = outputFrame.contentDocument || outputFrame.contentWindow.document;
+
+    outputDoc.open();
+    outputDoc.write(`
+        <html>
+            <body style="display: flex; justify-content: center; align-items: center; height: 90vh; background:rgb(226, 226, 226);">
+                <h2 style="color: black; font-size: 1.35em; 
+                    text-shadow: 2px 2px 5px rgba(223, 219, 219, 0.2),
+                                 -2px -2px 5px rgba(0, 0, 0, 0.2),
+                                 2px -2px 5px rgba(209, 206, 206, 0.2),
+                                 -2px 2px 5px rgba(0, 0, 0, 0.2);">
+                    ✍️ Please write your code before running!
+                </h2>
+            </body>
+        </html>
+    `);
+    outputDoc.close();
+}
+
+
+function removePlaceholder() {
+    const outputFrame = document.getElementById("outputFrame");
+    const outputDoc = outputFrame.contentDocument || outputFrame.contentWindow.document;
+
+    if (outputDoc.body.innerText.includes("Please write your code before running!")) {
+        outputDoc.open();
+        outputDoc.write("");
+        outputDoc.close();
+    }
+}
 
 
 function switchTab(id) {
@@ -19,13 +56,50 @@ function switchTab(id) {
     document.getElementById(`${id}-lines`).style.display = "block";
 }
 
+
+function run() {
+    try {
+        const htmlCode = document.getElementById("htmlCode").value.trim();
+        const cssCode = document.getElementById("cssCode").value;
+        const jsCode = document.getElementById("jsCode").value;
+
+        const outputFrame = document.getElementById("outputFrame");
+        const outputDoc = outputFrame.contentDocument || outputFrame.contentWindow.document;
+
+        outputDoc.open();
+
+        if (htmlCode === "") {
+            setPlaceholder();  // Reset placeholder if no HTML code
+        } else {
+            const fullOutput = `
+                <html>
+                    <head><style>${cssCode}</style></head>
+                    <body>
+                        ${htmlCode}
+                        <script>${jsCode}<\/script>
+                    </body>
+                </html>
+            `;
+
+            outputDoc.write(fullOutput);
+
+            saveCode();
+            localStorage.setItem("output", fullOutput);
+        }
+
+        outputDoc.close();
+    } catch (err) {
+        alert("Error in your code: " + err.message);
+    }
+}
+
+
 function setupLineNumbers() {
     const editors = ["htmlCode", "cssCode", "jsCode"];
 
     editors.forEach((id) => {
         const textarea = document.getElementById(id);
 
-     
         let lineNumbers = document.getElementById(`${id}-lines`);
         if (!lineNumbers) {
             lineNumbers = document.createElement("div");
@@ -39,33 +113,29 @@ function setupLineNumbers() {
             lineNumbers.innerHTML = Array.from({ length: lines }, (_, i) => i + 1).join("<br>");
         };
 
-     
         textarea.addEventListener("input", updateLineNumbers);
         textarea.addEventListener("scroll", () => {
             lineNumbers.scrollTop = textarea.scrollTop;
         });
 
-     
         updateLineNumbers();
         if (id !== "htmlCode") lineNumbers.style.display = "none";
     });
 }
 
 
-// Save code into localStorage
 function saveCode() {
     ["html", "css", "js"].forEach((type) => {
         localStorage.setItem(type, document.getElementById(`${type}Code`).value);
     });
 }
 
-// Load saved code from localStorage
+
 function loadSavedCode() {
     ["html", "css", "js"].forEach((type) => {
         document.getElementById(`${type}Code`).value = localStorage.getItem(type) || "";
     });
 
-    // Restore output from localStorage
     const savedOutput = localStorage.getItem("output");
     if (savedOutput) {
         const outputFrame = document.getElementById("outputFrame").contentWindow.document;
@@ -75,38 +145,7 @@ function loadSavedCode() {
     }
 }
 
-// Execute and render the code in the output iframe
-function run() {
-    try {
-        const htmlCode = document.getElementById("htmlCode").value;
-        const cssCode = document.getElementById("cssCode").value;
-        const jsCode = document.getElementById("jsCode").value;
 
-        const fullOutput = `
-            <html>
-                <head><style>${cssCode}</style></head>
-                <body>
-                    ${htmlCode}
-                    <script>${jsCode}<\/script>
-                </body>
-            </html>
-        `;
-
-        const outputFrame = document.getElementById("outputFrame").contentWindow.document;
-        outputFrame.open();
-        outputFrame.write(fullOutput);
-        outputFrame.close();
-
-        // Save code and output to localStorage
-        saveCode();
-        localStorage.setItem("output", fullOutput);
-
-    } catch (err) {
-        alert("Error in your code: " + err.message);
-    }
-}
-
-// Toggle the three-dot menu visibility
 function toggleMenu() {
     const menu = document.getElementById("menuContent");
     menu.classList.toggle("show");
@@ -115,7 +154,7 @@ function toggleMenu() {
     });
 }
 
-// Download the complete code as an HTML file
+
 function downloadCode() {
     const htmlCode = document.getElementById("htmlCode").value;
     const cssCode = document.getElementById("cssCode").value;
@@ -131,14 +170,11 @@ function downloadCode() {
     URL.revokeObjectURL(url);
 }
 
-// Clear all code areas and output
-// Clear all code areas AND localStorage
 function clearCode() {
     ["htmlCode", "cssCode", "jsCode"].forEach((id) => {
         document.getElementById(id).value = "";
     });
 
-    // Clear output and localStorage
     clearOutput();
     localStorage.removeItem("html");
     localStorage.removeItem("css");
@@ -148,7 +184,6 @@ function clearCode() {
     alert("All code and output have been cleared!");
 }
 
-// Clear ONLY the output frame and its saved version
 function clearOutput() {
     document.querySelector("iframe").srcdoc = "";
     localStorage.removeItem("output");
@@ -156,5 +191,4 @@ function clearOutput() {
     alert("Output has been cleared!");
 }
 
-
-function editorSetting(){}
+function editorSetting() {}
