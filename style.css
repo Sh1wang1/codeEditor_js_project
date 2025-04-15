@@ -23,10 +23,10 @@
 .tabs {
   display: flex;
   background: #333;
-  padding: 10px;
+  padding: 8px;
   gap: 5px;
   border-bottom: 2px solid #444;
-}
+  }
 
 .tab {
   padding: 10px 20px;
@@ -89,7 +89,6 @@ button {
   padding: 10px;
   cursor: pointer;
   font-size: 14px;
-  transition: 0.3s;
   width: 25%;
   border-radius: 12px;
 }
@@ -123,7 +122,7 @@ button {
   position: absolute;
   top: 100%;
   right: 0;
-  background: #fff;
+  background: #e4e1e1;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   border-radius: 5px;
   z-index: 10;
@@ -139,7 +138,7 @@ button {
 }
 
 .menu-content a:hover {
-  background: #ddd;
+  background: #fffdfd;
 }
 
 .menu-content.show {
